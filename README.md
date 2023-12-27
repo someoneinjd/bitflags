@@ -13,7 +13,7 @@ A single-header C++20 library for generating type-safe bitflags automatically:
 BITFLAGS(Test, A, B, C);
 
 int main() {
-    auto flag = Test::A | Test::B;
+    Test flag = Test::A | Test::B;
 
     std::cout << flag.to_string(); // "Test::A | Test::B"
 
@@ -38,7 +38,10 @@ int main() {
 BITFLAGS(TypeName, Flag0, Flag1, ...);
 ```
 
-which will generate a flag type named `TypeName` and flag values `TypeName::Flag0`, `TypeName::Flag1` and so on. **Note that the type of the flag value is not `TypeName`, but an internal type. This ensures that the user can only set/remove these defined flags for better type safety.**
+which will generate a flag type named `TypeName` and flag values `TypeName::Flag0`, `TypeName::Flag1` and so on.
+
+> [!NOTE]
+> The type of the flag value is not `TypeName`, but an internal type. This ensures that the user can only set/remove these defined flags for better type safety.
 
 The above example will generate the following type:
 
@@ -62,6 +65,9 @@ struct TypeName {
 };
 ```
 
+> [!IMPORTANT]
+> Always use the specific flag type `TypeName` instead of `auto`. As for `auto f = Flag0`, `f` will be deduced to the internal type `TypeNameFlag`, not `TypeName`.
+
 ### Overloaded Operators 
 
 The following operators are overloaded for the generated flags:
@@ -72,7 +78,8 @@ The following operators are overloaded for the generated flags:
 * `operator^`
 * `operator~`
 
-**Note: Note: All of the flag operations described in the rest of README can be implemented using these operators, they will be omitted for brevity.**
+> [!NOTE]
+> All of the flag operations described in the rest of README can be implemented using these operators, they will be omitted for brevity.
 
 ### Check if a specific flag is set
 
@@ -81,7 +88,7 @@ Use `contains` member funcion.
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::A | Test::B;
+Test flag = Test::A | Test::B;
 
 flag.contains(Test::A);          // true
 flag.contains(Test::C);          // false
@@ -95,7 +102,7 @@ Use member funcions `set` and `remove`.
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::A | Test::B;
+Test flag = Test::A | Test::B;
 
 flag.contains(Test::C); // false
 
@@ -113,7 +120,7 @@ Use member funcion `toggle`. If the flag is not already set, it will be set. On 
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::A | Test::B;
+Test flag = Test::A | Test::B;
 
 flag.contains(Test::A); // true
 flag.contains(Test::C); // false
@@ -132,7 +139,7 @@ Use member funcion `clear`.
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::A | Test::B;
+Test flag = Test::A | Test::B;
 
 flag.contains(Test::A); // true
 flag.contains(Test::B); // true
@@ -145,12 +152,15 @@ flag.contains(Test::B); // false
 
 ### All and Empty
 
-There are also static function `all` and `empty` for generating a value for which all flags are set / not set. **Note that the `all` function sets all the bits, whether it makes sense or not.**
+There are also static function `all` and `empty` for generating a value for which all flags are set / not set.
+
+> [!IMPORTANT]
+> The `all` function sets all the bits, whether it makes sense or not.
 
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::all();
+Test flag = Test::all();
 flag.is_all();          // true
 flag.contains(Test::A); // true
 flag.contains(Test::B); // true
@@ -172,7 +182,7 @@ Use member funcion `to_string`. It returns the names of all the flags that are s
 ```cpp
 BITFLAGS(Test, A, B, C);
 
-auto flag = Test::A | Test::B | Test::C;
+Test flag = Test::A | Test::B | Test::C;
 flag.to_string();          // "Test::A | Test::B | Test::C"
 Test::B.to_string();       // "Test::B"
 Test::empty().to_string(); // "<empty>"
