@@ -5,6 +5,8 @@ A single-header C++20 library for generating type-safe bitflags automatically:
 * Automatically infer underlying type.
 * Automatically generate flag values.
 
+test fix
+
 ## Quick start
 
 ```cpp
